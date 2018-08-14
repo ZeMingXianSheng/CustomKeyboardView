@@ -6,15 +6,14 @@
 //  Copyright © 2018年 Rain. All rights reserved.
 //
 
-#define WindowHeight     [UIScreen mainScreen].bounds.size.height
-#define WindowWidth      [UIScreen mainScreen].bounds.size.width
-
 #define  symbolWidth     ((WindowWidth - 0.5 * 4) / (82 * 3 / 64 + 2))
 
 #import "CustomKeyBoardView.h"
 #import "KeyBoardCell.h"
 #import "KeyModel.h"
 #import "WaterFallLayout.h"
+#import "KeyboardModeHandler.h"
+#import "MacroConfig.h"
 @interface CustomKeyBoardView () <UICollectionViewDelegate, UICollectionViewDataSource, WaterFallLayoutDelegate>
 
 @property (nonatomic, strong) UICollectionView *collectionView;
@@ -40,6 +39,21 @@
     if (self) {
         [self addSubview:self.collectionView];
         self.keyboardType = keyBoradType;
+        self.dataSource = [[KeyboardModeHandler shareKeyboardInstance] getKeyboardDataWithKeyboardType:keyBoradType];
+        self.num1 = 0;
+        self.num2 = 0;
+        self.num3 = 0;
+        self.finishCalculation = NO;
+
+    }
+    return self;
+}
+- (instancetype)initWithKeyboardType:(KeyBoardType)keyBoradType {
+    self = [super initWithFrame:CGRectMake(0, WindowHeight - SafeAreaTopHeight - BottomHomeBarHeight - 51 * 4 - 0.6 * 3, WindowWidth, 51 * 4 + 0.6 * 3)];
+    if (self) {
+        [self addSubview:self.collectionView];
+        self.keyboardType = keyBoradType;
+        self.dataSource = [[KeyboardModeHandler shareKeyboardInstance] getKeyboardDataWithKeyboardType:keyBoradType];
         self.num1 = 0;
         self.num2 = 0;
         self.num3 = 0;

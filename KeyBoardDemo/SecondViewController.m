@@ -73,10 +73,8 @@
 - (void)clickBtn:(UIButton *)sender {
     [_tf resignFirstResponder];
     //获取键盘布局数据
-    NSArray *tempArr = [[KeyboardModeHandler shareKeyboardInstance] getKeyboardDataWithKeyboardType:sender.tag];
-     CustomKeyBoardView *keyBoardView = [[CustomKeyBoardView alloc] initWithFrame:CGRectMake(0, [UIScreen mainScreen].bounds.size.height - 64 - 51 * 4 - 0.6 * 3, [UIScreen mainScreen].bounds.size.width, 51 * 4 + 0.6 * 3) keyBoardType:sender.tag];
+     CustomKeyBoardView *keyBoardView = [[CustomKeyBoardView alloc] initWithKeyboardType:sender.tag];
     keyBoardView.delegate = self;
-    keyBoardView.dataSource = tempArr;
     keyBoardView.inputText = self.tf.text;
     self.tf.inputView = keyBoardView;
     [self.tf becomeFirstResponder];

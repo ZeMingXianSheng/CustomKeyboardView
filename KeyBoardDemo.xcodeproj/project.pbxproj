@@ -8,8 +8,8 @@
 
 /* Begin PBXBuildFile section */
 		B680F22B2121B1DA0046A2C9 /* KeyboardModeHandler.m in Sources */ = {isa = PBXBuildFile; fileRef = B680F22A2121B1DA0046A2C9 /* KeyboardModeHandler.m */; };
+		B680F22F21226D8C0046A2C9 /* MacroConfig.m in Sources */ = {isa = PBXBuildFile; fileRef = B680F22E21226D8C0046A2C9 /* MacroConfig.m */; };
 		B6D774102112EF6D0010AC68 /* WaterFallLayout.m in Sources */ = {isa = PBXBuildFile; fileRef = B6D7740F2112EF6D0010AC68 /* WaterFallLayout.m */; };
-		B6D7741321132DA10010AC68 /* CustomTextFiled.m in Sources */ = {isa = PBXBuildFile; fileRef = B6D7741221132DA10010AC68 /* CustomTextFiled.m */; };
 		B6DD9C6C2110848800EBDC83 /* AppDelegate.m in Sources */ = {isa = PBXBuildFile; fileRef = B6DD9C6B2110848800EBDC83 /* AppDelegate.m */; };
 		B6DD9C6F2110848900EBDC83 /* ViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = B6DD9C6E2110848900EBDC83 /* ViewController.m */; };
 		B6DD9C722110848900EBDC83 /* Main.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = B6DD9C702110848900EBDC83 /* Main.storyboard */; };
@@ -45,10 +45,10 @@
 /* Begin PBXFileReference section */
 		B680F2292121B1DA0046A2C9 /* KeyboardModeHandler.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = KeyboardModeHandler.h; sourceTree = "<group>"; };
 		B680F22A2121B1DA0046A2C9 /* KeyboardModeHandler.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = KeyboardModeHandler.m; sourceTree = "<group>"; };
+		B680F22D21226D8C0046A2C9 /* MacroConfig.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = MacroConfig.h; sourceTree = "<group>"; };
+		B680F22E21226D8C0046A2C9 /* MacroConfig.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = MacroConfig.m; sourceTree = "<group>"; };
 		B6D7740E2112EF6D0010AC68 /* WaterFallLayout.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = WaterFallLayout.h; sourceTree = "<group>"; };
 		B6D7740F2112EF6D0010AC68 /* WaterFallLayout.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = WaterFallLayout.m; sourceTree = "<group>"; };
-		B6D7741121132DA10010AC68 /* CustomTextFiled.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = CustomTextFiled.h; sourceTree = "<group>"; };
-		B6D7741221132DA10010AC68 /* CustomTextFiled.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = CustomTextFiled.m; sourceTree = "<group>"; };
 		B6DD9C672110848800EBDC83 /* KeyBoardDemo.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = KeyBoardDemo.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		B6DD9C6A2110848800EBDC83 /* AppDelegate.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = AppDelegate.h; sourceTree = "<group>"; };
 		B6DD9C6B2110848800EBDC83 /* AppDelegate.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = AppDelegate.m; sourceTree = "<group>"; };
@@ -101,6 +101,47 @@
 /* End PBXFrameworksBuildPhase section */
 
 /* Begin PBXGroup section */
+		B680F234212276530046A2C9 /* View */ = {
+			isa = PBXGroup;
+			children = (
+				B6DD9C9F21115E3F00EBDC83 /* CustomKeyBoardView.h */,
+				B6DD9CA021115E3F00EBDC83 /* CustomKeyBoardView.m */,
+			);
+			path = View;
+			sourceTree = "<group>";
+		};
+		B680F235212276530046A2C9 /* Model */ = {
+			isa = PBXGroup;
+			children = (
+				B6DD9CA821119EA400EBDC83 /* keyboard.json */,
+				B6DD9CA2211163DC00EBDC83 /* KeyModel.h */,
+				B6DD9CA3211163DC00EBDC83 /* KeyModel.m */,
+				B680F2292121B1DA0046A2C9 /* KeyboardModeHandler.h */,
+				B680F22A2121B1DA0046A2C9 /* KeyboardModeHandler.m */,
+			);
+			path = Model;
+			sourceTree = "<group>";
+		};
+		B680F236212276910046A2C9 /* Cell */ = {
+			isa = PBXGroup;
+			children = (
+				B6DD9CA521118B4700EBDC83 /* KeyBoardCell.h */,
+				B6DD9CA621118B4700EBDC83 /* KeyBoardCell.m */,
+				B6D7740E2112EF6D0010AC68 /* WaterFallLayout.h */,
+				B6D7740F2112EF6D0010AC68 /* WaterFallLayout.m */,
+			);
+			path = Cell;
+			sourceTree = "<group>";
+		};
+		B680F237212276910046A2C9 /* Config */ = {
+			isa = PBXGroup;
+			children = (
+				B680F22D21226D8C0046A2C9 /* MacroConfig.h */,
+				B680F22E21226D8C0046A2C9 /* MacroConfig.m */,
+			);
+			path = Config;
+			sourceTree = "<group>";
+		};
 		B6DD9C5E2110848800EBDC83 = {
 			isa = PBXGroup;
 			children = (
@@ -124,25 +165,16 @@
 		B6DD9C692110848800EBDC83 /* KeyBoardDemo */ = {
 			isa = PBXGroup;
 			children = (
-				B6DD9CA821119EA400EBDC83 /* keyboard.json */,
 				B6DD9C6A2110848800EBDC83 /* AppDelegate.h */,
 				B6DD9C6B2110848800EBDC83 /* AppDelegate.m */,
 				B6DD9C6D2110848800EBDC83 /* ViewController.h */,
 				B6DD9C6E2110848900EBDC83 /* ViewController.m */,
 				B6DD9C9C21115D7A00EBDC83 /* SecondViewController.h */,
 				B6DD9C9D21115D7A00EBDC83 /* SecondViewController.m */,
-				B6DD9C9F21115E3F00EBDC83 /* CustomKeyBoardView.h */,
-				B6DD9CA021115E3F00EBDC83 /* CustomKeyBoardView.m */,
-				B6DD9CA2211163DC00EBDC83 /* KeyModel.h */,
-				B6DD9CA3211163DC00EBDC83 /* KeyModel.m */,
-				B680F2292121B1DA0046A2C9 /* KeyboardModeHandler.h */,
-				B680F22A2121B1DA0046A2C9 /* KeyboardModeHandler.m */,
-				B6DD9CA521118B4700EBDC83 /* KeyBoardCell.h */,
-				B6DD9CA621118B4700EBDC83 /* KeyBoardCell.m */,
-				B6D7740E2112EF6D0010AC68 /* WaterFallLayout.h */,
-				B6D7740F2112EF6D0010AC68 /* WaterFallLayout.m */,
-				B6D7741121132DA10010AC68 /* CustomTextFiled.h */,
-				B6D7741221132DA10010AC68 /* CustomTextFiled.m */,
+				B680F234212276530046A2C9 /* View */,
+				B680F236212276910046A2C9 /* Cell */,
+				B680F235212276530046A2C9 /* Model */,
+				B680F237212276910046A2C9 /* Config */,
 				B6DD9C702110848900EBDC83 /* Main.storyboard */,
 				B6DD9C732110848900EBDC83 /* Assets.xcassets */,
 				B6DD9C752110848900EBDC83 /* LaunchScreen.storyboard */,
@@ -305,10 +337,10 @@
 			buildActionMask = 2147483647;
 			files = (
 				B6DD9C9E21115D7A00EBDC83 /* SecondViewController.m in Sources */,
-				B6D7741321132DA10010AC68 /* CustomTextFiled.m in Sources */,
 				B6DD9CA721118B4700EBDC83 /* KeyBoardCell.m in Sources */,
 				B6DD9C6F2110848900EBDC83 /* ViewController.m in Sources */,
 				B680F22B2121B1DA0046A2C9 /* KeyboardModeHandler.m in Sources */,
+				B680F22F21226D8C0046A2C9 /* MacroConfig.m in Sources */,
 				B6DD9C7A2110848900EBDC83 /* main.m in Sources */,
 				B6D774102112EF6D0010AC68 /* WaterFallLayout.m in Sources */,
 				B6DD9CA121115E3F00EBDC83 /* CustomKeyBoardView.m in Sources */,

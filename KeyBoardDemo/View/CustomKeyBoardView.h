@@ -56,4 +56,11 @@ typedef NS_ENUM(NSInteger, KeyBoardType) {
  初始化键盘view
  */
 - (instancetype)initWithFrame:(CGRect)frame keyBoardType:(KeyBoardType)keyBoradType;
+/**
+ 初始化键盘view
+ 
+ @param keyBoradType 键盘类型
+ @return view
+ */
+- (instancetype)initWithKeyboardType:(KeyBoardType)keyBoradType;
 @end
