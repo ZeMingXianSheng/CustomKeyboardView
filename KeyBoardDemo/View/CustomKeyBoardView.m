@@ -49,7 +49,7 @@
     return self;
 }
 - (instancetype)initWithKeyboardType:(KeyBoardType)keyBoradType {
-    self = [super initWithFrame:CGRectMake(0, WindowHeight - SafeAreaTopHeight - BottomHomeBarHeight - 51 * 4 - 0.6 * 3, WindowWidth, 51 * 4 + 0.6 * 3)];
+    self = [super initWithFrame:CGRectMake(0, 0, WindowWidth, 51 * 4 + 0.6 * 3 + BottomHomeBarHeight)];
     if (self) {
         [self addSubview:self.collectionView];
         self.keyboardType = keyBoradType;
@@ -546,7 +546,7 @@
         WaterFallLayout *flowLayout = [[WaterFallLayout alloc] init];
         flowLayout.delegate = self;
         
-        _collectionView = [[UICollectionView alloc] initWithFrame:CGRectMake(0, 0, WindowWidth, self.frame.size.height) collectionViewLayout:flowLayout];
+        _collectionView = [[UICollectionView alloc] initWithFrame:CGRectMake(0, 0, WindowWidth, 51 * 4 + 0.5 * 3) collectionViewLayout:flowLayout];
         _collectionView.dataSource = self;
         _collectionView.scrollEnabled = NO;
         _collectionView.backgroundColor = [UIColor colorWithRed:182 / 255.0 green:188 / 255.0 blue:196 / 255.0 alpha:1.0];

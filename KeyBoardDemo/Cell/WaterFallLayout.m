@@ -120,7 +120,7 @@ static const UIEdgeInsets DefaultEdgeInsets = {0, 0, 0, 0};
     }
     
     atts.frame = CGRectMake(cellX, cellY, itemSize.width, itemSize.height);
-    
+    NSLog(@"atts.frame: %@", NSStringFromCGRect(atts.frame));
     //更新最短那一列的高度
     self.columnHieghts[destColumn] = @(CGRectGetMaxY(atts.frame));
     
