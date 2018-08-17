@@ -161,10 +161,7 @@
 //                if ([self.delegate respondsToSelector:@selector(clickSureAction)]) {
 //                    [self.delegate clickSureAction];
 //                }
-                //暂时关闭键盘, 可根据具体情况回调。
-                if ([self.delegate respondsToSelector:@selector(senderTextFieldContent:close:)]) {
-                    [self.delegate senderTextFieldContent:_valueString close:YES];
-                }
+                [self clickCalculate];//计算
                 break;
             case KeyboardInputTypeClose:
                 if ([self.delegate respondsToSelector:@selector(senderTextFieldContent:close:)]) {
