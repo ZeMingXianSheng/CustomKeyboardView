@@ -414,7 +414,14 @@
         [_contentString setString:tempStr];
         [_valueString setString:tempStr];
     }
-    
+    if (!_contentString.length && _operatorArr.count) {//限制输入多个连着的操作运算符
+        [_valueString replaceCharactersInRange:NSMakeRange(_valueString.length - 1, 1) withString:value];
+        [_operatorArr replaceObjectAtIndex:_operatorArr.count - 1 withObject:value];
+        if ([self.delegate respondsToSelector:@selector(senderTextFieldContent:close:)]) {
+            [self.delegate senderTextFieldContent:_valueString close:NO];
+        }
+        return;
+    }
     self.num3 = 0;
     NSString *tempString = [NSString stringWithString:self.contentString];
     [self.numArr addObject:tempString];
