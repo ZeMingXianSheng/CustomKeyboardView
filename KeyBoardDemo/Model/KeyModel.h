@@ -9,26 +9,26 @@
 #import <Foundation/Foundation.h>
 
 typedef NS_ENUM(NSInteger, KeyNumberType) {
-    KeyNumberTypeOne = 1,       //数字 1
-    KeyNumberTypeTwo,       //数字 2
-    KeyNumberTypeThree,     //数字 3
-    KeyNumberTypeFour,      //数字 4
-    KeyNumberTypeFive,      //数字 5
-    KeyNumberTypeSix,       //数字 6
-    KeyNumberTypeSeven,     //数字 7
-    KeyNumberTypeEight,     //数字 8
-    KeyNumberTypeNine,      //数字 9
-    KeyNumberTypeZero,      //数字 0
-    KeyNumberTypePoint,     //小数点
-    KeyNumberTypeClose,    //隐藏键盘
-    KeyNumberTypePositiveNegative,    //输入正负数
-    KeyNumberTypeDelete,    //删除
-    KeyNumberTypeClear,     //清空
-    KeyNumberTypeSure,      //确定
-    KeyNumberTypePlus,       //相加
-    KeyNumberTypeMinus,       //相减
-    KeyNumberTypeMultiply,  //相乘
-    KeyNumberTypeEqual      //等于
+    KeyNumberTypeOne,       //数字 1                      0
+    KeyNumberTypeTwo,       //数字 2                      1
+    KeyNumberTypeThree,     //数字 3                      2
+    KeyNumberTypeFour,      //数字 4                      3
+    KeyNumberTypeFive,      //数字 5                      4
+    KeyNumberTypeSix,       //数字 6                      5
+    KeyNumberTypeSeven,     //数字 7                      6
+    KeyNumberTypeEight,     //数字 8                      7
+    KeyNumberTypeNine,      //数字 9                      8
+    KeyNumberTypeZero,      //数字 0                      9
+    KeyNumberTypePoint,     //小数点                      10
+    KeyNumberTypeClose,     //隐藏键盘                    11
+    KeyNumberTypePositiveNegative,    //输入正负数        12
+    KeyNumberTypeDelete,    //删除                       13
+    KeyNumberTypeClear,     //清空                       14
+    KeyNumberTypeSure,      //确定                       15
+    KeyNumberTypePlus,       //相加                      16
+    KeyNumberTypeMinus,       //相减                     17
+    KeyNumberTypeMultiply,  //相乘                       18
+    KeyNumberTypeEqual      //等于                       19
     
 };
 

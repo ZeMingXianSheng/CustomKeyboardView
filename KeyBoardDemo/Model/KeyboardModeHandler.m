@@ -38,22 +38,116 @@ static KeyboardModeHandler *keyBoardModelHandler = nil;
     NSArray *tempArr = [[NSArray alloc] init];
     switch (keyboradType) {
         case 0://普通不计算
-            tempArr = @[dataArr[0], dataArr[1],dataArr[2],dataArr[13],dataArr[3],dataArr[4],dataArr[5],dataArr[14],dataArr[6],dataArr[7],dataArr[8],dataArr[15],dataArr[9],dataArr[11]];
+            tempArr = @[dataArr[KeyNumberTypeOne],
+                        dataArr[KeyNumberTypeTwo],
+                        dataArr[KeyNumberTypeThree],
+                        dataArr[KeyNumberTypeDelete],
+                        dataArr[KeyNumberTypeFour],
+                        dataArr[KeyNumberTypeFive],
+                        dataArr[KeyNumberTypeSix],
+                        dataArr[KeyNumberTypeClear],
+                        dataArr[KeyNumberTypeSeven],
+                        dataArr[KeyNumberTypeEight],
+                        dataArr[KeyNumberTypeNine],
+                        dataArr[KeyNumberTypeSure],
+                        dataArr[KeyNumberTypeZero],
+                        dataArr[KeyNumberTypeClose]];
             break;
         case 1://带小数
-            tempArr = @[dataArr[0], dataArr[1],dataArr[2],dataArr[13],dataArr[3],dataArr[4],dataArr[5],dataArr[14],dataArr[6],dataArr[7],dataArr[8],dataArr[15],dataArr[10],dataArr[9],dataArr[11]];
+            tempArr = @[dataArr[KeyNumberTypeOne],
+                        dataArr[KeyNumberTypeTwo],
+                        dataArr[KeyNumberTypeThree],
+                        dataArr[KeyNumberTypeDelete],
+                        dataArr[KeyNumberTypeFour],
+                        dataArr[KeyNumberTypeFive],
+                        dataArr[KeyNumberTypeSix],
+                        dataArr[KeyNumberTypeClear],
+                        dataArr[KeyNumberTypeSeven],
+                        dataArr[KeyNumberTypeEight],
+                        dataArr[KeyNumberTypeNine],
+                        dataArr[KeyNumberTypeSure],
+                        dataArr[KeyNumberTypePoint],
+                        dataArr[KeyNumberTypeZero],
+                        dataArr[KeyNumberTypeClose]];
             break;
         case 2://带正负
-            tempArr = @[dataArr[0], dataArr[1],dataArr[2],dataArr[13],dataArr[3],dataArr[4],dataArr[5],dataArr[14],dataArr[6],dataArr[7],dataArr[8],dataArr[15],dataArr[12],dataArr[9],dataArr[11]];
+            tempArr = @[dataArr[KeyNumberTypeOne],
+                        dataArr[KeyNumberTypeTwo],
+                        dataArr[KeyNumberTypeThree],
+                        dataArr[KeyNumberTypeDelete],
+                        dataArr[KeyNumberTypeFour],
+                        dataArr[KeyNumberTypeFive],
+                        dataArr[KeyNumberTypeSix],
+                        dataArr[KeyNumberTypeClear],
+                        dataArr[KeyNumberTypeSeven],
+                        dataArr[KeyNumberTypeEight],
+                        dataArr[KeyNumberTypeNine],
+                        dataArr[KeyNumberTypeSure],
+                        dataArr[KeyNumberTypePositiveNegative],
+                        dataArr[KeyNumberTypeNine],
+                        dataArr[KeyNumberTypeClose]];
             break;
         case 3://普通计算
-            tempArr = @[dataArr[16],dataArr[0], dataArr[1],dataArr[2],dataArr[13],dataArr[17],dataArr[3],dataArr[4],dataArr[5],dataArr[14],dataArr[18],dataArr[6],dataArr[7],dataArr[8],dataArr[15],dataArr[19],dataArr[9],dataArr[11]];
+            tempArr = @[dataArr[KeyNumberTypePlus],
+                        dataArr[KeyNumberTypeOne],
+                        dataArr[KeyNumberTypeTwo],
+                        dataArr[KeyNumberTypeThree],
+                        dataArr[KeyNumberTypeDelete],
+                        dataArr[KeyNumberTypeMinus],
+                        dataArr[KeyNumberTypeFour],
+                        dataArr[KeyNumberTypeFive],
+                        dataArr[KeyNumberTypeSix],
+                        dataArr[KeyNumberTypeClear],
+                        dataArr[KeyNumberTypeMultiply],
+                        dataArr[KeyNumberTypeSeven],
+                        dataArr[KeyNumberTypeEight],
+                        dataArr[KeyNumberTypeNine],
+                        dataArr[KeyNumberTypeSure],
+                        dataArr[KeyNumberTypeEqual],
+                        dataArr[KeyNumberTypeZero],
+                        dataArr[KeyNumberTypeClose]];
             break;
         case 4://计算带小数
-            tempArr = @[dataArr[16],dataArr[0], dataArr[1],dataArr[2],dataArr[13],dataArr[17],dataArr[3],dataArr[4],dataArr[5],dataArr[14],dataArr[18],dataArr[6],dataArr[7],dataArr[8],dataArr[15],dataArr[19],dataArr[10],dataArr[9],dataArr[11]];
+            tempArr = @[dataArr[KeyNumberTypePlus],
+                        dataArr[KeyNumberTypeOne],
+                        dataArr[KeyNumberTypeTwo],
+                        dataArr[KeyNumberTypeThree],
+                        dataArr[KeyNumberTypeDelete],
+                        dataArr[KeyNumberTypeMinus],
+                        dataArr[KeyNumberTypeFour],
+                        dataArr[KeyNumberTypeFive],
+                        dataArr[KeyNumberTypeSix],
+                        dataArr[KeyNumberTypeClear],
+                        dataArr[KeyNumberTypeMultiply],
+                        dataArr[KeyNumberTypeSeven],
+                        dataArr[KeyNumberTypeEight],
+                        dataArr[KeyNumberTypeNine],
+                        dataArr[KeyNumberTypeSure],
+                        dataArr[KeyNumberTypeEqual],
+                        dataArr[KeyNumberTypePoint],
+                        dataArr[KeyNumberTypeZero],
+                        dataArr[KeyNumberTypeClose]];
             break;
         case 5://计算带正负
-            tempArr = @[dataArr[16],dataArr[0], dataArr[1],dataArr[2],dataArr[13],dataArr[17],dataArr[3],dataArr[4],dataArr[5],dataArr[14],dataArr[18],dataArr[6],dataArr[7],dataArr[8],dataArr[15],dataArr[19],dataArr[12],dataArr[9],dataArr[11]];
+            tempArr = @[dataArr[KeyNumberTypePlus],
+                        dataArr[KeyNumberTypeOne],
+                        dataArr[KeyNumberTypeTwo],
+                        dataArr[KeyNumberTypeThree],
+                        dataArr[KeyNumberTypeDelete],
+                        dataArr[KeyNumberTypeMinus],
+                        dataArr[KeyNumberTypeFour],
+                        dataArr[KeyNumberTypeFive],
+                        dataArr[KeyNumberTypeSix],
+                        dataArr[KeyNumberTypeClear],
+                        dataArr[KeyNumberTypeMultiply],
+                        dataArr[KeyNumberTypeSeven],
+                        dataArr[KeyNumberTypeEight],
+                        dataArr[KeyNumberTypeNine],
+                        dataArr[KeyNumberTypeSure],
+                        dataArr[KeyNumberTypeEqual],
+                        dataArr[KeyNumberTypePositiveNegative],
+                        dataArr[KeyNumberTypeZero],
+                        dataArr[KeyNumberTypeClose]];
             break;
         default:
             break;
