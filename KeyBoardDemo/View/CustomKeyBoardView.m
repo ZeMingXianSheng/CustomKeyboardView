@@ -62,10 +62,14 @@
     return self;
 }
 - (void)setInputText:(NSString *)inputText {
-    if (!inputText.length) {
+    if (!inputText.length ||
+        _keyboardType == KeyBoardTypeNormal
+        || _keyboardType == KeyBoardTypePoint
+        || _keyboardType == KeyBoardTypeNegavite) {
         return;
     }
     self.valueString.string = inputText;
+    
     if (![inputText containsString:@"+"]
         && ![inputText containsString:@"-"]
         && ![inputText containsString:@"×"]
@@ -161,7 +165,16 @@
 //                if ([self.delegate respondsToSelector:@selector(clickSureAction)]) {
 //                    [self.delegate clickSureAction];
 //                }
-                [self clickCalculate];//计算
+                if (_keyboardType == KeyBoardTypeCalcuateNormal
+                    || _keyboardType == KeyBoardTypeCalcuatePoint
+                    || _keyboardType == KeyBoardTypeCalcuateNegavite) {
+                    [self clickCalculate];//计算
+                } else {//关闭键盘
+                    if ([self.delegate respondsToSelector:@selector(senderTextFieldContent:close:)]) {
+                        [self.delegate senderTextFieldContent:_valueString close:YES];
+                    }
+                }
+                
                 break;
             case KeyboardInputTypeClose:
                 if ([self.delegate respondsToSelector:@selector(senderTextFieldContent:close:)]) {
