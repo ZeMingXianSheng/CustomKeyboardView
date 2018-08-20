@@ -76,35 +76,51 @@
         && ![inputText containsString:@"/"]) {
         self.contentString.string = inputText;
     } else {
-        NSString *tempStr = nil;
-        //倒序遍历字符串
-        NSInteger i = inputText.length - 1;
-        NSMutableString *mStr = [NSMutableString stringWithFormat:@"%@", inputText];
-        while (i > 0) {
-            tempStr = [mStr substringWithRange:NSMakeRange(i, 1)];
-            if ([tempStr isEqualToString:@"+"]
-                || [tempStr isEqualToString:@"-"]
-                || [tempStr isEqualToString:@"×"]
-                || [tempStr isEqualToString:@"/"]) {
-                if (!self.numArr.count) {
-                    if ([mStr substringWithRange:NSMakeRange(i + 1, mStr.length - i - 1)].length) {
-                        [_numArr addObject:[mStr substringWithRange:NSMakeRange(i + 1, mStr.length - i - 1)]];
-                    }
-                } else {
-                    [_numArr insertObject:[mStr substringWithRange:NSMakeRange(i + 1, mStr.length - i - 1)] atIndex:0];//插入计算数值
+        //分割操作数
+        NSCharacterSet *numCharacter = [NSCharacterSet characterSetWithCharactersInString:@"+-×/"];
+        NSArray *numArr =  [inputText componentsSeparatedByCharactersInSet:numCharacter];
+        self.numArr = numArr.mutableCopy;
+        //分割运算符
+        NSCharacterSet *operatorCha = [NSCharacterSet characterSetWithCharactersInString:@"0123456789"];
+        NSArray *operatorArr = [inputText componentsSeparatedByCharactersInSet:operatorCha];
+        if (operatorArr.count) {
+            for (NSString *operator in operatorArr) {
+                if (operator.length) {//删除多余的空字符串
+                    [self.operatorArr addObject:operator];
                 }
-                if (!self.operatorArr.count) {
-                    [_operatorArr addObject:tempStr];
-                } else {
-                    [_operatorArr insertObject:tempStr atIndex:0];//插入运算符
-                }
-                [mStr deleteCharactersInRange:NSMakeRange(i, mStr.length - i)];//移除已经遍历过的字符串
             }
-            i--;
         }
-        if (mStr.length) {//插入第一个计算数值
-            [_numArr insertObject:mStr atIndex:0];
-        }
+        
+
+//        //倒序遍历字符串
+//        NSString *tempStr = nil;
+//        NSInteger i = inputText.length - 1;
+//        NSMutableString *mStr = [NSMutableString stringWithFormat:@"%@", inputText];
+//        while (i > 0) {
+//            tempStr = [mStr substringWithRange:NSMakeRange(i, 1)];
+//            if ([tempStr isEqualToString:@"+"]
+//                || [tempStr isEqualToString:@"-"]
+//                || [tempStr isEqualToString:@"×"]
+//                || [tempStr isEqualToString:@"/"]) {
+//                if (!self.numArr.count) {
+//                    if ([mStr substringWithRange:NSMakeRange(i + 1, mStr.length - i - 1)].length) {
+//                        [_numArr addObject:[mStr substringWithRange:NSMakeRange(i + 1, mStr.length - i - 1)]];
+//                    }
+//                } else {
+//                    [_numArr insertObject:[mStr substringWithRange:NSMakeRange(i + 1, mStr.length - i - 1)] atIndex:0];//插入计算数值
+//                }
+//                if (!self.operatorArr.count) {
+//                    [_operatorArr addObject:tempStr];
+//                } else {
+//                    [_operatorArr insertObject:tempStr atIndex:0];//插入运算符
+//                }
+//                [mStr deleteCharactersInRange:NSMakeRange(i, mStr.length - i)];//移除已经遍历过的字符串
+//            }
+//            i--;
+//        }
+//        if (mStr.length) {//插入第一个计算数值
+//            [_numArr insertObject:mStr atIndex:0];
+//        }
     }
     if (_operatorArr.count) {//当有运算符时，最后一个操作数是需要赋值给 contentString。 因为下面输入运算符或者等于运算符时，会把contentString添加到numArr数组里面参与运算。 这样操作是为了方便处理删除运算符的结果。
         self.contentString.string = _numArr.lastObject;
