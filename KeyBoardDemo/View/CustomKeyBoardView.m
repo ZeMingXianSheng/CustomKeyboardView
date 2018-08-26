@@ -6,7 +6,22 @@
 //  Copyright © 2018年 Rain. All rights reserved.
 //
 
+#ifdef DEBUG
+#define debugLog(format, ...) NSLog(@"[%s] %s [第%d行] \n %@", __TIME__, __FUNCTION__, __LINE__, [NSString stringWithFormat:format, ##__VA_ARGS__]);
+#define debugMethod() NSLog(@"%s", __func__)
+#else
+#define debugLog(...)
+#define debugMethod()
+#endif
+
+
+#define iPhone4 ([UIScreen instancesRespondToSelector:@selector(currentMode)] ? CGSizeEqualToSize(CGSizeMake(640, 960), [[UIScreen mainScreen] currentMode].size) : NO)
+#define iPhone5s ([UIScreen instancesRespondToSelector:@selector(currentMode)] ? CGSizeEqualToSize(CGSizeMake(640, 1136), [[UIScreen mainScreen] currentMode].size) : NO)
+
 #define  symbolWidth     ((WindowWidth - 0.5 * 4) / (82 * 3 / 64 + 2))
+
+#define symbolHeight (iPhone5s ? 51 :  (51 * ( [UIScreen mainScreen].bounds.size.height / 667)))
+
 
 #import "CustomKeyBoardView.h"
 #import "KeyBoardCell.h"
@@ -15,7 +30,6 @@
 #import "KeyboardModeHandler.h"
 #import "MacroConfig.h"
 @interface CustomKeyBoardView () <UICollectionViewDelegate, UICollectionViewDataSource, WaterFallLayoutDelegate>
-
 @property (nonatomic, strong) UICollectionView *collectionView;
 
 @property (nonatomic, strong) NSMutableString *contentString;//存储计算过程中的输入的内容
@@ -28,13 +42,12 @@
 
 @property (nonatomic, strong) NSMutableArray *operatorArr;//存储操作符的数组
 
-@property (nonatomic, assign) BOOL finishCalculation;//完成计算
-
+@property (nonatomic, assign) BOOL finishCalculation;//是否完成计算
 @end
 
 @implementation CustomKeyBoardView
 
-- (instancetype)initWithFrame:(CGRect)frame keyBoardType:(KeyBoardType)keyBoradType{
+- (instancetype)initWithFrame:(CGRect)frame keyBoardType:(KeyBoardType)keyBoradType {
     self = [super initWithFrame:frame];
     if (self) {
         [self addSubview:self.collectionView];
@@ -44,32 +57,32 @@
         self.num2 = 0;
         self.num3 = 0;
         self.finishCalculation = NO;
-
     }
     return self;
 }
 - (instancetype)initWithKeyboardType:(KeyBoardType)keyBoradType {
-    self = [super initWithFrame:CGRectMake(0, 0, WindowWidth, 51 * 4 + 0.6 * 3 + BottomHomeBarHeight)];
+    self = [self initWithFrame:CGRectMake(0, 0, WindowWidth, symbolHeight * 4 + 0.6 * 3 + BottomHomeBarHeight) keyBoardType:keyBoradType];
+    return self;
+}
+
+- (instancetype)initWithKeyboardType:(KeyBoardType)keyBoradType inputSource:(UIView *)inputSource {
+    self = [self initWithKeyboardType:keyBoradType];
     if (self) {
-        [self addSubview:self.collectionView];
-        self.keyboardType = keyBoradType;
-        self.dataSource = [[KeyboardModeHandler shareKeyboardInstance] getKeyboardDataWithKeyboardType:keyBoradType];
-        self.num1 = 0;
-        self.num2 = 0;
-        self.num3 = 0;
-        self.finishCalculation = NO;
+        self.inputSource = inputSource;
     }
     return self;
 }
+
+#pragma mark -- inputText setting方法解析数据
 - (void)setInputText:(NSString *)inputText {
-    if (!inputText.length ||
+    if (!inputText.length||
         _keyboardType == KeyBoardTypeNormal
         || _keyboardType == KeyBoardTypePoint
-        || _keyboardType == KeyBoardTypeNegavite) {
+        || _keyboardType == KeyBoardTypeNegavite
+        ) {
         return;
     }
     self.valueString.string = inputText;
-    
     if (![inputText containsString:@"+"]
         && ![inputText containsString:@"-"]
         && ![inputText containsString:@"×"]
@@ -90,37 +103,6 @@
                 }
             }
         }
-        
-
-//        //倒序遍历字符串
-//        NSString *tempStr = nil;
-//        NSInteger i = inputText.length - 1;
-//        NSMutableString *mStr = [NSMutableString stringWithFormat:@"%@", inputText];
-//        while (i > 0) {
-//            tempStr = [mStr substringWithRange:NSMakeRange(i, 1)];
-//            if ([tempStr isEqualToString:@"+"]
-//                || [tempStr isEqualToString:@"-"]
-//                || [tempStr isEqualToString:@"×"]
-//                || [tempStr isEqualToString:@"/"]) {
-//                if (!self.numArr.count) {
-//                    if ([mStr substringWithRange:NSMakeRange(i + 1, mStr.length - i - 1)].length) {
-//                        [_numArr addObject:[mStr substringWithRange:NSMakeRange(i + 1, mStr.length - i - 1)]];
-//                    }
-//                } else {
-//                    [_numArr insertObject:[mStr substringWithRange:NSMakeRange(i + 1, mStr.length - i - 1)] atIndex:0];//插入计算数值
-//                }
-//                if (!self.operatorArr.count) {
-//                    [_operatorArr addObject:tempStr];
-//                } else {
-//                    [_operatorArr insertObject:tempStr atIndex:0];//插入运算符
-//                }
-//                [mStr deleteCharactersInRange:NSMakeRange(i, mStr.length - i)];//移除已经遍历过的字符串
-//            }
-//            i--;
-//        }
-//        if (mStr.length) {//插入第一个计算数值
-//            [_numArr insertObject:mStr atIndex:0];
-//        }
     }
     if (_operatorArr.count) {//当有运算符时，最后一个操作数是需要赋值给 contentString。 因为下面输入运算符或者等于运算符时，会把contentString添加到numArr数组里面参与运算。 这样操作是为了方便处理删除运算符的结果。
         self.contentString.string = _numArr.lastObject;
@@ -157,9 +139,9 @@
                 } else {
                     self.valueString = [NSMutableString stringWithFormat:@"-%@", _valueString];
                 }
-                if ([self.delegate respondsToSelector:@selector(senderTextFieldContent:close:)]) {
-                    [self.delegate senderTextFieldContent:_valueString close:NO];
-                }
+                [self clearInputSource];
+                [self inputString:_valueString close:NO];
+                
                 break;
             case KeyboardInputTypePlus:
             case KeyboardInputTypeMinus:
@@ -170,7 +152,7 @@
             case KeyboardInputTypeEqual:
                 [self clickCalculate];//点击计算
                 break;
-            case KeyboardInputTypeDelete:
+            case KeyboardInputTypeDelete://删除
                 [self clickDelete];
                 
                 break;
@@ -178,23 +160,20 @@
                 [self clickClear];
                 break;
             case KeyboardInputTypeSure://点击确定
-//                if ([self.delegate respondsToSelector:@selector(clickSureAction)]) {
-//                    [self.delegate clickSureAction];
-//                }
+                
                 if (_keyboardType == KeyBoardTypeCalcuateNormal
                     || _keyboardType == KeyBoardTypeCalcuatePoint
                     || _keyboardType == KeyBoardTypeCalcuateNegavite) {
                     [self clickCalculate];//计算
                 } else {//关闭键盘
-                    if ([self.delegate respondsToSelector:@selector(senderTextFieldContent:close:)]) {
-                        [self.delegate senderTextFieldContent:_valueString close:YES];
+                    if (self.confirmBlock) {
+                        self.confirmBlock();
                     }
                 }
-                
                 break;
-            case KeyboardInputTypeClose:
-                if ([self.delegate respondsToSelector:@selector(senderTextFieldContent:close:)]) {
-                    [self.delegate senderTextFieldContent:_valueString close:YES];
+            case KeyboardInputTypeClose://关闭
+                if (self.closeKeyboardBlock) {
+                    self.closeKeyboardBlock();
                 }
                 break;
                 
@@ -205,7 +184,7 @@
         
     };
     
-   
+    
     return cell;
 }
 
@@ -215,18 +194,18 @@
     switch (_keyboardType) {
         case KeyBoardTypeNormal://普通键盘 不带小数点和正负
             if (model.keyNumberType == KeyNumberTypeSure) {//确定按钮
-                return CGSizeMake((WindowWidth - 0.5 * 3) / 4, 51 * 2 + 0.5);
+                return CGSizeMake((WindowWidth - 0.5 * 3) / 4, symbolHeight * 2 + 0.5);
             } else if (model.keyNumberType == KeyNumberTypeZero)  {//0 按钮
-                return CGSizeMake((WindowWidth - 0.5 * 3) / 4 * 2 + 0.5, 51);
+                return CGSizeMake((WindowWidth - 0.5 * 3) / 4 * 2 + 0.5,symbolHeight);
             }
-            return CGSizeMake((WindowWidth - 0.5 * 3) / 4, 51);
+            return CGSizeMake((WindowWidth - 0.5 * 3) / 4, symbolHeight);
             break;
         case KeyBoardTypePoint://有小数点
         case KeyBoardTypeNegavite://无小数点、有正负
             if (model.keyNumberType == KeyNumberTypeSure) {//确定按钮
-                return CGSizeMake((WindowWidth - 0.5 * 3) / 4, 51 * 2 + 0.5);
+                return CGSizeMake((WindowWidth - 0.5 * 3) / 4, symbolHeight * 2 + 0.5);
             }
-            return CGSizeMake((WindowWidth - 0.5 * 3) / 4, 51);
+            return CGSizeMake((WindowWidth - 0.5 * 3) / 4, symbolHeight);
             break;
         case KeyBoardTypeCalcuateNormal: //计算 不带小数点、不带正负
             if (model.keyNumberType == KeyNumberTypePlus
@@ -235,13 +214,13 @@
                 || model.keyNumberType == KeyNumberTypeEqual
                 || model.keyNumberType == KeyNumberTypeDelete
                 || model.keyNumberType == KeyNumberTypeClear) {
-                return CGSizeMake(symbolWidth, 51);
+                return CGSizeMake(symbolWidth, symbolHeight);
             } else if (model.keyNumberType == KeyNumberTypeSure) {//确定按钮
-                return CGSizeMake(symbolWidth, 51 * 2 + 0.5);
+                return CGSizeMake(symbolWidth, symbolHeight * 2 + 0.5);
             } else if (model.keyNumberType == KeyNumberTypeZero)  {//0 按钮
-                return CGSizeMake((WindowWidth - 0.5 * 4 - symbolWidth * 2) / 3 * 2 + 0.5, 51);
+                return CGSizeMake((WindowWidth - 0.5 * 4 - symbolWidth * 2) / 3 * 2 + 0.5, symbolHeight);
             }
-            return CGSizeMake((WindowWidth - 0.5 * 4 - symbolWidth * 2) / 3, 51);
+            return CGSizeMake((WindowWidth - 0.5 * 4 - symbolWidth * 2) / 3, symbolHeight);
             break;
         case KeyBoardTypeCalcuatePoint: //计算 带小数点
         case KeyBoardTypeCalcuateNegavite: //计算 带正负
@@ -251,11 +230,11 @@
                 || model.keyNumberType == KeyNumberTypeEqual
                 || model.keyNumberType == KeyNumberTypeDelete
                 || model.keyNumberType == KeyNumberTypeClear) {
-                return CGSizeMake(symbolWidth, 51);
+                return CGSizeMake(symbolWidth, symbolHeight);
             } else if (model.keyNumberType == KeyNumberTypeSure) {//确定按钮
-                return CGSizeMake(symbolWidth, 51 * 2 + 0.5);
+                return CGSizeMake(symbolWidth, symbolHeight * 2 + 0.5);
             }
-            return CGSizeMake((WindowWidth - 0.5 * 4 - symbolWidth * 2) / 3, 51);
+            return CGSizeMake((WindowWidth - 0.5 * 4 - symbolWidth * 2) / 3, symbolHeight);
             break;
         default:
             break;
@@ -283,7 +262,7 @@
     return 0;
 }
 
-#pragma mark -- private method
+
 #pragma mark -- 计算有关
 
 /**
@@ -296,9 +275,7 @@
     _num3 = 0;
     [_numArr removeAllObjects];
     [_operatorArr removeAllObjects];
-    if ([self.delegate respondsToSelector:@selector(senderTextFieldContent:close:)]) {
-        [self.delegate senderTextFieldContent:_valueString close:NO];
-    }
+    [self clearInputSource];
 }
 
 /**
@@ -341,8 +318,8 @@
             [_numArr removeLastObject];//删除原来的最后数字值
             if (lastStr.length) {
                 [_numArr addObject:lastStr];//添加修改的数字值
-                _num3 = [lastStr doubleValue];
             }
+            _num3 = [lastStr doubleValue];
         }
         [_valueString deleteCharactersInRange:NSMakeRange(_valueString.length - 1, 1)];//删除最后一个字符
         if (_contentString.length) {
@@ -356,10 +333,7 @@
         [_numArr removeAllObjects];
         [_operatorArr removeAllObjects];
     }
-    
-    if ([self.delegate respondsToSelector:@selector(senderTextFieldContent:close:)]) {
-        [self.delegate senderTextFieldContent:_valueString close:NO];
-    }
+    [self deleteInputSource];
 }
 
 /**
@@ -383,9 +357,9 @@
     } else {
         [self.contentString appendString:number];
     }
-    if ([self.delegate respondsToSelector:@selector(senderTextFieldContent:close:)]) {
-        [self.delegate senderTextFieldContent:_valueString close:NO];
-    }
+    [self inputString:number close:NO];
+    
+    //    _finishCalculation = NO;
 }
 
 /**
@@ -417,13 +391,12 @@
         }
     }
     
-    if ([self.delegate respondsToSelector:@selector(senderTextFieldContent:close:)]) {
-        [self.delegate senderTextFieldContent:_valueString close:NO];
-    }
+    [self inputString:@"." close:NO];
+    
 }
 
 /**
-点击加减乘除操作符
+ 点击加减乘除操作符
  */
 - (void)clickOperator:(NSString *)value {
     if (_finishCalculation == YES) {
@@ -440,14 +413,15 @@
         [_contentString setString:tempStr];
         [_valueString setString:tempStr];
     }
+    
     if (!_contentString.length && _operatorArr.count) {//限制输入多个连着的操作运算符
         [_valueString replaceCharactersInRange:NSMakeRange(_valueString.length - 1, 1) withString:value];
         [_operatorArr replaceObjectAtIndex:_operatorArr.count - 1 withObject:value];
-        if ([self.delegate respondsToSelector:@selector(senderTextFieldContent:close:)]) {
-            [self.delegate senderTextFieldContent:_valueString close:NO];
-        }
+        [self inputString:value close:NO];
+        
         return;
     }
+    
     self.num3 = 0;
     NSString *tempString = [NSString stringWithString:self.contentString];
     [self.numArr addObject:tempString];
@@ -455,9 +429,7 @@
     [_valueString appendString:value];
     [self.operatorArr addObject:value];//保存操作符
     [self.contentString setString:@""];//清空内容string
-    if ([self.delegate respondsToSelector:@selector(senderTextFieldContent:close:)]) {
-        [self.delegate senderTextFieldContent:_valueString close:NO];
-    }
+    [self inputString:value close:NO];
 }
 
 /**
@@ -501,11 +473,11 @@
                 [self dealSameCalculateWay];
                 break;
             case 3://最后一个运算
-//                _num1 = [_numArr[0] doubleValue];
-//                _num2 = [_numArr[1] doubleValue];
-//                _num3 = [self calculateWithNumber1:_num1 number2:_num2 atOperatorIndex:0];
-//                [_operatorArr removeObjectAtIndex:0];//删除最后一个符号
-                 [self dealSameCalculateWay];
+                //                _num1 = [_numArr[0] doubleValue];
+                //                _num2 = [_numArr[1] doubleValue];
+                //                _num3 = [self calculateWithNumber1:_num1 number2:_num2 atOperatorIndex:0];
+                //                [_operatorArr removeObjectAtIndex:0];//删除最后一个符号
+                [self dealSameCalculateWay];
                 break;
             default:
                 break;
@@ -513,19 +485,19 @@
     }
     
     NSLog(@"num3: %f", _num3);
-
+    
     [_valueString setString:[NSString stringWithFormat:@"%g", self.num3]];
     [_operatorArr removeObjectAtIndex:0];//计算完成后删除#
-//    [_contentString setString:[NSString stringWithFormat:@"%g", self.num3]];
+    //    [_contentString setString:[NSString stringWithFormat:@"%g", self.num3]];
     [_contentString setString:@""];
     _finishCalculation = YES;
     _num1 = 0;
     _num2 = 0;
-    if ([self.delegate respondsToSelector:@selector(senderTextFieldContent:close:)]) {
-        [self.delegate senderTextFieldContent:_valueString close:NO];
-    }
+    [self clearInputSource];
+    [self inputString:_valueString close:NO];
+    
 }
-
+#pragma mark -- private method
 /**
  处理相同的结算方式
  */
@@ -572,14 +544,102 @@
     }
 }
 
+/**
+ 删除字符操作
+ */
+- (void)deleteInputSource {
+    if ([self.inputSource isKindOfClass:[UITextField class]]) {
+        UITextField *textField = (UITextField *)self.inputSource;
+        textField.text = [textField.text substringToIndex:textField.text.length - 1];
+    } else if ([self.inputSource isKindOfClass:[UITextView class]]) {
+        UITextView *textView = (UITextView *)self.inputSource;
+        textView.text = [textView.text substringToIndex:textView.text.length - 1];
+    } else if ([self.inputSource isKindOfClass:[UISearchBar class]]) {
+        UISearchBar *searchBar = (UISearchBar *)self.inputSource;
+        NSMutableString *seartText = [NSMutableString stringWithString:searchBar.text];
+        if (seartText.length > 0) {
+            NSString *tempStr = [seartText substringToIndex:seartText.length - 1];
+            [searchBar setText:tempStr];
+        }
+    }
+    [self inputString:@"" close:NO];
+}
+
+/**
+ 清空当前输入框内容
+ */
+- (void)clearInputSource {
+    if ([self.inputSource isKindOfClass:[UITextField class]]) {
+        UITextField *textField = (UITextField *)self.inputSource;
+        textField.text =@"";
+    } else if ([self.inputSource isKindOfClass:[UITextView class]]) {
+        UITextView *textView = (UITextView *)self.inputSource;
+        textView.text = @"";
+    } else if ([self.inputSource isKindOfClass:[UISearchBar class]]) {
+        UISearchBar *searchBar = (UISearchBar *)self.inputSource;
+        searchBar.text = @"";
+    }
+    [self inputString:nil close:NO];
+}
+
+#pragma mark -- 输入文字
+/*
+ 触发 textField:shouldChangeCharactersInRange:replacementString: 代理方法
+ 触发 textView:shouldChangeTextInRange:replacementText: 代理方法
+ 触发 searchBar:shouldChangeTextInRange:replacementText: 代理方法
+ */
+- (void)inputString:(NSString *)string close:(BOOL)close {
+    if (!string.length) {
+        return;
+    }
+    if ([_inputSource isKindOfClass:[UITextField class]]) {//UITextField 类型
+        UITextField *textField = (UITextField *)self.inputSource;
+        if (textField.delegate && [textField.delegate respondsToSelector:@selector(textField:shouldChangeCharactersInRange:replacementString:)]) {
+            NSRange range = NSMakeRange(textField.text.length, 1);
+            BOOL ret = [textField.delegate textField:textField shouldChangeCharactersInRange:range replacementString:string];
+            if (ret) {
+                [textField insertText:string];
+            }
+        } else {
+            [textField insertText:string];
+        }
+    } else if ([self.inputSource isKindOfClass:[UITextView class]]) {//UITextView 类型
+        UITextView *textView = (UITextView *)self.inputSource;
+        if (textView.delegate && [textView.delegate respondsToSelector:@selector(textView:shouldChangeTextInRange:replacementText:)]) {
+            NSRange range = NSMakeRange(textView.text.length, 1);
+            BOOL ret = [textView.delegate textView:textView shouldChangeTextInRange:range replacementText:string];
+            if (ret) {
+                [textView insertText:string];
+            }
+        } else {
+            [textView insertText:string];
+        }
+    } else if ([self.inputSource isKindOfClass:[UISearchBar class]]) {//UISearchBar 类型
+        UISearchBar *searchBar = (UISearchBar *)self.inputSource;
+        NSMutableString *searchText = [NSMutableString stringWithString:searchBar.text];
+        [searchText appendString:string];
+        if (searchBar.delegate && [searchBar.delegate respondsToSelector:@selector(searchBar:shouldChangeTextInRange:replacementText:)]) {
+            NSRange range = NSMakeRange(searchBar.text.length, 1);
+            BOOL ret = [searchBar.delegate searchBar:searchBar shouldChangeTextInRange:range replacementText:string];
+            if (ret) {
+                [searchBar setText:[searchText copy]];
+            }
+        } else {
+            [searchBar setText:[searchText copy]];
+        }
+    }
+    
+}
+
 #pragma mark -- lazy
 - (UICollectionView *)collectionView {
     if (!_collectionView) {
+        //        UICollectionViewFlowLayout *flowLayout = [[UICollectionViewFlowLayout alloc] init];
         //创建布局
         WaterFallLayout *flowLayout = [[WaterFallLayout alloc] init];
         flowLayout.delegate = self;
         
-        _collectionView = [[UICollectionView alloc] initWithFrame:CGRectMake(0, 0, WindowWidth, 51 * 4 + 0.5 * 3) collectionViewLayout:flowLayout];
+        _collectionView = [[UICollectionView alloc] initWithFrame:CGRectMake(0, 0, WindowWidth, symbolHeight * 4 + 0.5 * 3) collectionViewLayout:flowLayout];
         _collectionView.dataSource = self;
         _collectionView.scrollEnabled = NO;
         _collectionView.backgroundColor = [UIColor colorWithRed:182 / 255.0 green:188 / 255.0 blue:196 / 255.0 alpha:1.0];

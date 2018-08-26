@@ -17,6 +17,9 @@ typedef NS_ENUM(NSInteger, KeyBoardType) {
     KeyBoardTypeCalcuateNegavite,   //计算数字键盘        带正负
 };
 
+typedef void(^CloseKeyboardBlock)();//关闭自定义键盘block
+typedef void(^ConfirmBlock)();//点击确定按钮block
+
 @protocol CustomKeyBoardViewDelegate <NSObject>
 @required
 /**
@@ -37,6 +40,11 @@ typedef NS_ENUM(NSInteger, KeyBoardType) {
 
 @interface CustomKeyBoardView : UIView
 /**
+ 传入正在输入的文本框
+ */
+@property (nonatomic, strong) UIView *inputSource;
+
+/**
  数据源
  */
 @property (nonatomic, strong) NSArray *dataSource;
@@ -52,6 +60,10 @@ typedef NS_ENUM(NSInteger, KeyBoardType) {
  代理
  */
 @property (nonatomic, weak) id<CustomKeyBoardViewDelegate>delegate;
+
+@property (nonatomic, copy) CloseKeyboardBlock closeKeyboardBlock;
+
+@property (nonatomic, copy) ConfirmBlock confirmBlock;
 /**
  初始化键盘view
  */
@@ -63,4 +75,11 @@ typedef NS_ENUM(NSInteger, KeyBoardType) {
  @return view
  */
 - (instancetype)initWithKeyboardType:(KeyBoardType)keyBoradType;
+/**
+ 初始化键盘view
+ 
+ @param keyBoradType 键盘类型
+ @return view
+ */
+- (instancetype)initWithKeyboardType:(KeyBoardType)keyBoradType inputSource:(UIView *)inputSource;
 @end

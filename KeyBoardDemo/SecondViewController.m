@@ -10,7 +10,7 @@
 #import "KeyModel.h"
 #import "CustomKeyBoardView.h"
 #import "KeyboardModeHandler.h"
-@interface SecondViewController () <CustomKeyBoardViewDelegate, UITextFieldDelegate>
+@interface SecondViewController () <UITextFieldDelegate>
 @property (nonatomic, strong) NSMutableArray *dataArr;
 
 @property (nonatomic, strong) UITextField *tf;
@@ -72,26 +72,28 @@
  */
 - (void)clickBtn:(UIButton *)sender {
     [_tf resignFirstResponder];
-    //获取键盘布局数据
-     CustomKeyBoardView *keyBoardView = [[CustomKeyBoardView alloc] initWithKeyboardType:sender.tag];
-    keyBoardView.delegate = self;
-    keyBoardView.inputText = self.tf.text;
-    self.tf.inputView = keyBoardView;
-    [self.tf becomeFirstResponder];
     
-}
-#pragma mark -- CustomKeyBoardViewDelegate 代理方法
-//返回文本内容  计算后
-- (void)senderTextFieldContent:(NSString *)value close:(BOOL)close {
-    if (close) {
+    CustomKeyBoardView *keyBoardView = [[CustomKeyBoardView alloc] initWithKeyboardType:sender.tag inputSource:_tf];
+    keyBoardView.inputText = _tf.text;
+    _tf.inputView = keyBoardView;
+    keyBoardView.closeKeyboardBlock = ^{
+        //TODO
         [_tf resignFirstResponder];
-    }
-    self.tf.text = value;
+    };
+    keyBoardView.confirmBlock = ^{
+        //TODO
+        [_tf resignFirstResponder];
+    };
 }
 
 #pragma mark -- 回收键盘
 - (void)touchesBegan:(NSSet<UITouch *> *)touches withEvent:(UIEvent *)event {
     [_tf resignFirstResponder];
+}
+
+#pragma mark -- UITextFieldDelegate
+- (BOOL)textField:(UITextField *)textField shouldChangeCharactersInRange:(NSRange)range replacementString:(NSString *)string {
+    return YES;
 }
 
 

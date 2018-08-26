@@ -35,7 +35,7 @@ static KeyboardModeHandler *keyBoardModelHandler = nil;
         model.status = [dic[@"status"] boolValue];
         [dataArr addObject:model];
     }
-    NSArray *tempArr = [[NSArray alloc] init];
+    NSArray *tempArr = @[];
     switch (keyboradType) {
         case 0://普通不计算
             tempArr = @[dataArr[KeyNumberTypeOne],
