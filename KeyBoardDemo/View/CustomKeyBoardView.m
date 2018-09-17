@@ -548,20 +548,24 @@
  删除字符操作
  */
 - (void)deleteInputSource {
+    if (self.deleteBlock) {
+        self.deleteBlock();
+    }
     if ([self.inputSource isKindOfClass:[UITextField class]]) {
         UITextField *textField = (UITextField *)self.inputSource;
         textField.text = [textField.text substringToIndex:textField.text.length - 1];
     } else if ([self.inputSource isKindOfClass:[UITextView class]]) {
         UITextView *textView = (UITextView *)self.inputSource;
         textView.text = [textView.text substringToIndex:textView.text.length - 1];
-    } else if ([self.inputSource isKindOfClass:[UISearchBar class]]) {
-        UISearchBar *searchBar = (UISearchBar *)self.inputSource;
-        NSMutableString *seartText = [NSMutableString stringWithString:searchBar.text];
-        if (seartText.length > 0) {
-            NSString *tempStr = [seartText substringToIndex:seartText.length - 1];
-            [searchBar setText:tempStr];
-        }
     }
+//    else if ([self.inputSource isKindOfClass:[UISearchBar class]]) {
+//        UISearchBar *searchBar = (UISearchBar *)self.inputSource;
+//        NSMutableString *seartText = [NSMutableString stringWithString:searchBar.text];
+//        if (seartText.length > 0) {
+//            NSString *tempStr = [seartText substringToIndex:seartText.length - 1];
+//            [searchBar setText:tempStr];
+//        }
+//    }
     [self inputString:@"" close:NO];
 }
 
@@ -569,16 +573,20 @@
  清空当前输入框内容
  */
 - (void)clearInputSource {
+    if (self.clearBlock) {
+        self.clearBlock();
+    }
     if ([self.inputSource isKindOfClass:[UITextField class]]) {
         UITextField *textField = (UITextField *)self.inputSource;
         textField.text =@"";
     } else if ([self.inputSource isKindOfClass:[UITextView class]]) {
         UITextView *textView = (UITextView *)self.inputSource;
         textView.text = @"";
-    } else if ([self.inputSource isKindOfClass:[UISearchBar class]]) {
-        UISearchBar *searchBar = (UISearchBar *)self.inputSource;
-        searchBar.text = @"";
     }
+//    else if ([self.inputSource isKindOfClass:[UISearchBar class]]) {
+//        UISearchBar *searchBar = (UISearchBar *)self.inputSource;
+//        searchBar.text = @"";
+//    }
     [self inputString:nil close:NO];
 }
 
@@ -614,20 +622,21 @@
         } else {
             [textView insertText:string];
         }
-    } else if ([self.inputSource isKindOfClass:[UISearchBar class]]) {//UISearchBar 类型
-        UISearchBar *searchBar = (UISearchBar *)self.inputSource;
-        NSMutableString *searchText = [NSMutableString stringWithString:searchBar.text];
-        [searchText appendString:string];
-        if (searchBar.delegate && [searchBar.delegate respondsToSelector:@selector(searchBar:shouldChangeTextInRange:replacementText:)]) {
-            NSRange range = NSMakeRange(searchBar.text.length, 1);
-            BOOL ret = [searchBar.delegate searchBar:searchBar shouldChangeTextInRange:range replacementText:string];
-            if (ret) {
-                [searchBar setText:[searchText copy]];
-            }
-        } else {
-            [searchBar setText:[searchText copy]];
-        }
     }
+//    else if ([self.inputSource isKindOfClass:[UISearchBar class]]) {//UISearchBar 类型
+//        UISearchBar *searchBar = (UISearchBar *)self.inputSource;
+//        NSMutableString *searchText = [NSMutableString stringWithString:searchBar.text];
+//        [searchText appendString:string];
+//        if (searchBar.delegate && [searchBar.delegate respondsToSelector:@selector(searchBar:shouldChangeTextInRange:replacementText:)]) {
+//            NSRange range = NSMakeRange(searchBar.text.length, 1);
+//            BOOL ret = [searchBar.delegate searchBar:searchBar shouldChangeTextInRange:range replacementText:string];
+//            if (ret) {
+//                [searchBar setText:[searchText copy]];
+//            }
+//        } else {
+//            [searchBar setText:[searchText copy]];
+//        }
+//    }
     
 }
 

@@ -17,8 +17,10 @@ typedef NS_ENUM(NSInteger, KeyBoardType) {
     KeyBoardTypeCalcuateNegavite,   //计算数字键盘        带正负
 };
 
-typedef void(^CloseKeyboardBlock)();//关闭自定义键盘block
-typedef void(^ConfirmBlock)();//点击确定按钮block
+typedef void(^CloseKeyboardBlock)(void);//关闭自定义键盘block
+typedef void(^ConfirmBlock)(void);//点击确定按钮block
+typedef void(^DeleteBlock)(void);//点击删除按钮block
+typedef void(^ClearBlock)(void);//点击清空按钮block
 
 @protocol CustomKeyBoardViewDelegate <NSObject>
 @required
@@ -64,6 +66,10 @@ typedef void(^ConfirmBlock)();//点击确定按钮block
 @property (nonatomic, copy) CloseKeyboardBlock closeKeyboardBlock;
 
 @property (nonatomic, copy) ConfirmBlock confirmBlock;
+
+@property (nonatomic, copy) DeleteBlock deleteBlock;
+
+@property (nonatomic, copy) ClearBlock clearBlock;
 /**
  初始化键盘view
  */
