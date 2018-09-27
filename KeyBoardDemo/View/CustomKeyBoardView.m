@@ -137,7 +137,7 @@
                 if (keyModel.status == YES) {
                     self.valueString = [NSMutableString stringWithFormat:@"%@",[_valueString substringFromIndex:1]];
                 } else {
-                    self.valueString = [NSMutableString stringWithFormat:@"-%@", _valueString];
+                    self.valueString = [NSMutableString stringWithFormat:@"-%@", _valueString.length ? _valueString : @"0"];
                 }
                 [self clearInputSource];
                 [self inputString:_valueString close:NO];
@@ -553,10 +553,10 @@
     }
     if ([self.inputSource isKindOfClass:[UITextField class]]) {
         UITextField *textField = (UITextField *)self.inputSource;
-        textField.text = [textField.text substringToIndex:textField.text.length - 1];
+        textField.text = textField.text.length ? [textField.text substringToIndex:textField.text.length - 1] : @"";
     } else if ([self.inputSource isKindOfClass:[UITextView class]]) {
         UITextView *textView = (UITextView *)self.inputSource;
-        textView.text = [textView.text substringToIndex:textView.text.length - 1];
+        textView.text = textView.text.length ? [textView.text substringToIndex:textView.text.length - 1] : @"";
     }
 //    else if ([self.inputSource isKindOfClass:[UISearchBar class]]) {
 //        UISearchBar *searchBar = (UISearchBar *)self.inputSource;
